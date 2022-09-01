@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, SubmitField, TextAreaField, URLField, PasswordField
+from wtforms import IntegerField, StringField, SubmitField, TextAreaField, URLField, PasswordField, DateField
 
 from wtforms.validators import InputRequired, NumberRange, Email, EqualTo, Length
 
@@ -24,6 +24,7 @@ class StringListField(TextAreaField):
             self.data = []
 
 class ExtendedMovieForm(MovieForm):
+    date = DateField("Last Watched")
     cast = StringListField("Cast")
     series = StringListField("Series")
     tags = StringListField("Tags")
@@ -64,3 +65,6 @@ class LoginForm(FlaskForm):
     email = StringField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired()])
     submit = SubmitField("Login")
+
+class DeleteForm(FlaskForm):
+    submit = SubmitField("Delete")

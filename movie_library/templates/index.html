@@ -16,7 +16,9 @@
         <tr class="table__header">
           <th class="table__cell table__cell--header">Title</th>
           <th class="table__cell table__cell--header">Release Date</th>
-          <th class="table__cell table__cell--header"></th>
+          <th class="table__cell table__cell--header">Last Watched</th>
+          <th class="table__cell table__cell--header">Rating</th>
+          <th class="table__cell table__cell--header">Details</th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +30,14 @@
                 {{ movie.director }}</p>
             </td>
             <td class="table__cell">{{ movie.year }}</td>
+            <td class="table__cell">
+              {% if movie.date == None %}
+              {% else %}
+                <time datetime="{{ movie.date }}">{{movie.date.strftime("%#m/%#d/%Y")}}</time>
+              {% endif %}
+            </td>
+
+            <td class="table__cell">{{ "" if movie.rating == 0 else movie.rating }}{{ "" if movie.rating == 0 else "/5" }}</td>
             <td class="table__cell">
               <a href="{{ url_for('pages.movie', _id=movie._id) }}" class="table__link">View</a>
             </td>

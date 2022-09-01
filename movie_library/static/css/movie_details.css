@@ -63,8 +63,12 @@
     }
 
 .movie__tag {
+    margin-top: 5px;
     padding: 3px 8px;
     background-color: var(--tag-colour);
+    border: var(--border);
+    border-width: 1px;
+    border-radius: 10%;
     }
 
 .movie__tag:not(:first-of-type) {
@@ -113,3 +117,39 @@
 .star--filled {
     fill: #ffc800;
     }
+
+.delete__link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-dark);
+    margin-left: 1rem;
+    }
+.delete__link:hover {
+    text-decoration: underline;
+}
+
+.trash {
+    display:flex;
+    width: 1em;
+    height: 1em;
+    fill: var(--text-dark);
+    }
+
+.date__input[type="date"] {
+    width: 1.5rem;
+}
+
+.date__popup {
+    display: none;
+}
+
+.action__links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bold {
+    font-weight: 600;
+}

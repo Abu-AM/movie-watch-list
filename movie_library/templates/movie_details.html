@@ -1,5 +1,6 @@
 {% from "macros/svgs.html" import star,
-pencil %}
+pencil,
+trash %}
 
 {% extends "layout.html" %}
 
@@ -20,23 +21,23 @@ pencil %}
               </a>
             {% endfor %}
           </div>
+
         </div>
         <div class="movie__watched">
-          {% if movie.last_watched %}
-            <p>
-              Last watched:
-              <a href="{{ url_for('pages.watch_today', _id=movie._id) }}" class="watched__link">
-                <time datetime="{{ movie.last_watched }}">{{movie.last_watched.strftime("%d %b %Y")}}</time>
-              </a>
+          <p>
+            Last watched:&nbsp;
+          </p>
+          {% if movie.date %}
+            <p class="bold">
+
+              <time datetime="{{ movie.date }}">{{movie.date.strftime("%b %#d, %Y")}}</time>
+
             </p>
           {% else %}
-            <p>
-              <a href="{{ url_for('pages.watch_today', _id=movie._id) }}" class="watched__link">Not watched yet</a>
+            <p class="bold">
+              Not set
             </p>
           {% endif %}
-          <a class="movie__edit" href="{{ url_for('pages.edit_movie', _id=movie._id) }}">
-            Edit
-            {{ pencil("pencil") }}</a>
         </div>
       </div>
       <div class="header__row">
@@ -45,6 +46,14 @@ pencil %}
             <li class="movie__tag">{{ tag }}</li>
           {% endfor %}
         </ul>
+        <div class="action__links">
+          <a class="movie__edit" href="{{ url_for('pages.edit_movie', _id=movie._id) }}">
+            Edit
+            {{ pencil("pencil") }}</a>
+
+          <a href="{{ url_for('pages.delete_movie', _id=movie._id) }}" class="delete__link">Delete
+            {{ trash("trash") }}</a>
+        </div>
       </div>
     </header>
     {% if movie.video_link %}

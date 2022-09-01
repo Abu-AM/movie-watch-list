@@ -19,3 +19,11 @@
     {% endfor %}
   </div>
 {% endmacro %}
+
+{% macro render_delete_field(field) %}
+  {{ field(class_="button button--delete") }}
+
+  {% for error in field.errors %}
+    <span class="form__error">{{ error }}</span>
+  {% endfor %}
+{% endmacro %}

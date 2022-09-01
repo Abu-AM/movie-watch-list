@@ -14,7 +14,7 @@ from flask import(
     )
 from dataclasses import asdict
 
-from movie_library.forms import MovieForm, ExtendedMovieForm, RegisterForm, LoginForm
+from movie_library.forms import MovieForm, ExtendedMovieForm, RegisterForm, LoginForm, DeleteForm
 from movie_library.models import Movie, User
 from passlib.hash import pbkdf2_sha256
 
@@ -45,6 +45,10 @@ def index():
     movie_data = current_app.db.movie.find({"_id": {"$in": user.movies}})
 
     movies = [Movie(**movie) for movie in movie_data]
+    
+    for movie in movies:
+        if movie.date:
+            movie.date = datetime.datetime.fromisoformat(movie.date)
 
     return render_template(
         "index.html",
@@ -82,6 +86,9 @@ def movie(_id: str):
         abort(404)
     
     movie = Movie(**movie_data)
+    
+    if movie.date:
+        movie.date = datetime.datetime.fromisoformat(movie.date)
 
     return render_template("movie_details.html", movie=movie)
 
@@ -90,6 +97,7 @@ def movie(_id: str):
 def edit_movie(_id: str):
     movie = Movie(**current_app.db.movie.find_one({"_id": _id}))
     form = ExtendedMovieForm(obj=movie)
+    
     if form.validate_on_submit():
         movie.title = form.title.data
         movie.director = form.director.data
@@ -99,9 +107,13 @@ def edit_movie(_id: str):
         movie.tags = form.tags.data
         movie.description = form.description.data
         movie.video_link = form.video_link.data
+        movie.date = form.date.data.isoformat()
 
         current_app.db.movie.update_one({"_id": movie._id}, {"$set": asdict(movie)})
         return redirect(url_for(".movie", _id=movie._id))
+    
+    if form.date.data:
+        form.date.data = datetime.datetime.fromisoformat(form.date.data)
 
     return render_template("movie_form.html", movie=movie, form=form)
 
@@ -170,15 +182,19 @@ def rate_movie(_id):
 
     return redirect(url_for(".movie", _id=_id))
 
-@pages.get("/movie/<string:_id>/watch")
+@pages.route("/movie/<string:_id>/delete", methods=["GET", "POST"])
 @login_required
-def watch_today(_id):
-    current_app.db.movie.update_one(
-        {"_id": _id},
-        {"$set": {"last_watched": datetime.datetime.today()}}
-    )
+def delete_movie(_id):
+    form = DeleteForm()
 
-    return redirect(url_for(".movie", _id=_id))
+    if form.validate_on_submit():
+        current_app.db.movie.delete_one({"_id": _id})
+        return redirect(url_for(".index"))
+
+    return render_template(
+        "delete_confirmation.html",
+        title="Confirm Delete",
+        _id=_id, form=form)
 
 @pages.get("/toggle-theme")
 def toggle_theme():

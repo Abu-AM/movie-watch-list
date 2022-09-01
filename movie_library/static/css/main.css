@@ -142,6 +142,10 @@ body {
   color: var(--accent-color);
 }
 
+.nav__link--active:hover {
+  color: var(--text-dark);
+}
+
 .nav__item {
   font-weight: 600;
   letter-spacing: 1px;
@@ -188,4 +192,8 @@ body {
 
 .link:hover {
   text-decoration: underline;
+}
+
+.strip_decoration {
+  text-decoration: none;
 }
